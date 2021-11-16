@@ -2,7 +2,6 @@ import React from 'react';
 import './styles.css';
 
 function Select({ options, handleChange, valueSelected }) {
- 
   return (
     <select
       className="select"
@@ -10,7 +9,9 @@ function Select({ options, handleChange, valueSelected }) {
       value={valueSelected.value}
     >
       {options.map(({ value, label, id }) => (
-        <option value={id}>{label}</option>
+        <option key={`${value}-${id}`} value={id}>
+          {label}
+        </option>
       ))}
     </select>
   );

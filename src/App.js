@@ -8,6 +8,7 @@ import { fetchData } from './services/fetch';
 export default function App() {
   const { data, isLoading, error } = useApi(URLs.provincias);
   const [provinciaSelected, setProvinciaSelected] = React.useState('');
+  const [municipios, setMunicipios] = React.useState([]);
 
   const provinciasFormatted =
     !isLoading &&
@@ -16,6 +17,14 @@ export default function App() {
         value: prov.nombre.toLowerCase().split(' ').join('-'),
         label: prov.nombre,
         id: prov.id,
+      };
+    });
+ 
+    const municipiosFormatted = municipios.length && municipios.map((muni) => {
+      return {
+        value: muni.nombre.toLowerCase().split(' ').join('-'),
+        label: muni.nombre,
+        id: muni.id,
       };
     });
 
@@ -27,7 +36,7 @@ export default function App() {
       async function getData() {
         try {
           const data = await fetchData(urlProvincia);
-          console.log(data)
+          setMunicipios(data.municipios)
         } catch (error) {
           console.log(error)
         } 
@@ -53,11 +62,13 @@ export default function App() {
             handleChange={handleProvincias}
           />
 
-          <Select
-            options={provinciasFormatted}
-            valueSelected={provinciaSelected}
-            handleChange={handleProvincias}
-          />
+          {Boolean(municipios.length) && 
+            <Select
+              options={municipiosFormatted}
+              valueSelected={''}
+              handleChange={()=> ''}
+            />
+          }
         </>
       )}
     </div>
