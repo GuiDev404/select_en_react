@@ -9,7 +9,7 @@ function Select({ options, handleChange, valueSelected }) {
       value={valueSelected.value}
     >
       {options.map(({ value, label, id }) => (
-        <option key={`${value}-${id}`} value={id}>
+        <option key={`${value}-${id}`} data-label={label} value={id}>
           {label}
         </option>
       ))}

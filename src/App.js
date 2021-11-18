@@ -19,8 +19,10 @@ export default function App() {
         id: prov.id,
       };
     });
- 
-    const municipiosFormatted = municipios.length && municipios.map((muni) => {
+
+  const municipiosFormatted =
+    municipios.length &&
+    municipios.map((muni) => {
       return {
         value: muni.nombre.toLowerCase().split(' ').join('-'),
         label: muni.nombre,
@@ -29,22 +31,24 @@ export default function App() {
     });
 
   const handleProvincias = (e) => {
-    setProvinciaSelected(e.target.value);
-   
-      const urlProvincia = `https://apis.datos.gob.ar/georef/api/municipios?provincia=${e.target.value}&campos=id,nombre&max=1000`;
-    
-      async function getData() {
-        try {
-          const data = await fetchData(urlProvincia);
-          setMunicipios(data.municipios)
-        } catch (error) {
-          console.log(error)
-        } 
+    const provincia = provinciasFormatted.find(
+      (prov) => prov.id === e.target.value
+    );
+
+    setProvinciaSelected(provincia);
+
+    const urlProvincia = `https://apis.datos.gob.ar/georef/api/municipios?provincia=${provincia.id}&campos=id,nombre&max=1000`;
+
+    async function getData() {
+      try {
+        const data = await fetchData(urlProvincia);
+        setMunicipios(data.municipios);
+      } catch (error) {
+        console.log(error);
       }
+    }
 
-      getData()
-    
-
+    getData();
   };
 
   return (
@@ -62,13 +66,20 @@ export default function App() {
             handleChange={handleProvincias}
           />
 
-          {Boolean(municipios.length) && 
+          {Boolean(municipios.length) ? (
             <Select
               options={municipiosFormatted}
               valueSelected={''}
-              handleChange={()=> ''}
+              handleChange={() => ''}
             />
-          }
+          ) : (
+            <h4>
+              {' '}
+              No hay localidades para la provincia {
+                provinciaSelected.label
+              }{' '}
+            </h4>
+          )}
         </>
       )}
     </div>
